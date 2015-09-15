@@ -32,7 +32,7 @@ namespace SimpleBankingSystem.Domain.Services
             if (transaction == null)
                 throw new ArgumentNullException("transaction");
 
-            var executer = GetTransactionExecuterByType(transaction.Type);
+            var executer = GetTransactionExecutorByType(transaction.Type);
             executer.Execute(transaction);
         }
 
@@ -41,7 +41,7 @@ namespace SimpleBankingSystem.Domain.Services
         /// </summary>
         /// <param name="transactionType">The transaction type</param>
         /// <returns>Transaction executer</returns>
-        private ITransactionExecutor GetTransactionExecuterByType(TransactionType transactionType)
+        private ITransactionExecutor GetTransactionExecutorByType(TransactionType transactionType)
         {
             if (_transactionExecutors.ContainsKey(transactionType))
                 return _transactionExecutors[transactionType];

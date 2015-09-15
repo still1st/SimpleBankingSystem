@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimpleBankingSystem.Domain.Models;
+using SimpleBankingSystem.Domain.Repositories;
 using SimpleBankingSystem.Domain.Services;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,11 @@ namespace SimpleBankingSystem.Domain.Tests
         [TestInitialize]
         public void Init()
         {
-            _bankService = new BankService();
+            var accountRepository = new AccountRepository();
+            var userRepository = new UserRepository();
+            var transactionRepository = new TransactionRepository();
+
+            _bankService = new BankService(accountRepository, userRepository, transactionRepository);
             _user = CreateUser();
         }
 

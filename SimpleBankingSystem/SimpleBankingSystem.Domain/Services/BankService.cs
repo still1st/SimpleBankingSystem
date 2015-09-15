@@ -1,6 +1,8 @@
 ﻿using SimpleBankingSystem.Domain.Models;
+using SimpleBankingSystem.Domain.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SimpleBankingSystem.Domain.Services
 {
@@ -11,14 +13,19 @@ namespace SimpleBankingSystem.Domain.Services
     {
         #region private fields
         /// <summary>
-        /// The accounts of the users
+        /// The repository for <see cref="Account"/> entities
         /// </summary>
-        private Dictionary<User, List<Account>> _accountsByUsers;
+        private IAccountRepository _accountRepository;
 
         /// <summary>
-        /// The collection of the transactions
+        /// The repository for <see cref="Transaction"/> entities
         /// </summary>
-        private List<Transaction> _transactions;
+        private ITransactionRepository _transactionRepository;
+
+        /// <summary>
+        /// The repository for <see cref="User"/> entities
+        /// </summary>
+        private IUserRepository _userRepository;
 
         /// <summary>
         /// The transaction service
@@ -30,10 +37,14 @@ namespace SimpleBankingSystem.Domain.Services
         /// <summary>
         /// Initializes a new instance of <see cref="BankService"/>
         /// </summary>
-        public BankService()
+        public BankService(IAccountRepository accountRepository,
+            IUserRepository userRepository,
+            ITransactionRepository transactionRepository)
         {
-            _accountsByUsers = new Dictionary<User, List<Account>>();
-            _transactions = new List<Transaction>();
+            _accountRepository = accountRepository;
+            _userRepository = userRepository;
+            _transactionRepository = transactionRepository;
+
             _transactionService = new TransactionService();
         } 
         #endregion
@@ -48,41 +59,29 @@ namespace SimpleBankingSystem.Domain.Services
             if (user == null)
                 throw new ArgumentNullException("user");
 
-            // try to get exist accounts
-            List<Account> accounts;
-            if (!_accountsByUsers.TryGetValue(user, out accounts))
-            {
-                accounts = new List<Account>();
-                _accountsByUsers[user] = accounts;
-            }
-                
             var account = new Account
             {
                 Balance = 0m,
                 User = user
             };
 
-            accounts.Add(account);
+            _accountRepository.Add(account);
 
             return account;
         }
 
         /// <summary>
         /// Gets all accounts for the user
-        /// Returns null if user doesn't have accounts
-        /// else returns all the user's accounts
         /// </summary>
         /// <param name="user"><see cref="User"/> entity</param>
-        /// <returns>Collection of the user's <see cref="Account"/> entities</returns>
+        /// <returns>Collection of the <see cref="Account"/> entities for the user</returns>
         public IEnumerable<Account> GetAccountsForUser(User user)
         {
             if (user == null)
                 throw new ArgumentNullException("user");
 
-            if (_accountsByUsers.ContainsKey(user))
-                return _accountsByUsers[user];
-
-            return null;
+            var accounts = _accountRepository.GetAccountsForUser(user);
+            return accounts;
         }
 
         /// <summary>
@@ -97,8 +96,7 @@ namespace SimpleBankingSystem.Domain.Services
             if (!DoesTheAccountExist(account))
                 throw new ArgumentException(String.Format("Account with ID {0} wasn't found", account.AccountId));
 
-            var accounts = _accountsByUsers[account.User];
-            accounts.Remove(account);
+            _accountRepository.Delete(account);
         }
 
         /// <summary>
@@ -130,11 +128,15 @@ namespace SimpleBankingSystem.Domain.Services
                 IsCommited = false
             };
 
-            _transactions.Add(transaction);
+            _transactionRepository.Add(transaction);
 
             return transaction;
         }
 
+        /// <summary>
+        /// Executes the transaction
+        /// </summary>
+        /// <param name="transaction"><see cref="Transaction"/> entity</param>
         public void ExecuteTransaction(Transaction transaction)
         {
             if (transaction == null)
@@ -160,7 +162,7 @@ namespace SimpleBankingSystem.Domain.Services
             if (transaction == null)
                 throw new ArgumentNullException("transaction");
 
-            return _transactions.Contains(transaction);
+            return _transactionRepository.GetAll().Contains(transaction);
         }
 
         /// <summary>
@@ -173,7 +175,7 @@ namespace SimpleBankingSystem.Domain.Services
             if (user == null)
                 throw new ArgumentNullException("user");
 
-            return _accountsByUsers.ContainsKey(user);
+            return _accountRepository.GetAll().Any(x => x.User == user);
         }
 
         /// <summary>
@@ -191,8 +193,7 @@ namespace SimpleBankingSystem.Domain.Services
             if (!DoesTheUserExistInAccounts(account.User))
                 throw new ArgumentException(String.Format("Owner of an account with ID {0} wasn't found", account.AccountId));
 
-            var accounts = _accountsByUsers[user];
-
+            var accounts = _accountRepository.GetAll().Where(x => x.User == user);
             return accounts.Contains(account);
         } 
         #endregion
