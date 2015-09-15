@@ -23,6 +23,23 @@ namespace SimpleBankingSystem.WebApp
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+
+            bundles.Add(new ScriptBundle("~/bundles/angular").Include(
+                "~/Scripts/angular.js",
+                "~/Scripts/angular-animate.js",
+                "~/Scripts/angular-sanitize.js",
+                "~/Scripts/angular-resource.js",
+                "~/Scripts/angular-route.js",
+                "~/Scripts/angular-cookies.js"));
+
+            // Angular Bootstrap
+            bundles.Add(new ScriptBundle("~/bundles/angularBootstrap").Include(
+                "~/Scripts/angular-ui/ui-bootstrap-tpls.js"));
+
+            // App
+            bundles.Add(new ScriptBundle("~/bundles/app")
+                .IncludeDirectory("~/app/", "*.module.js", true)
+                .IncludeDirectory("~/app/", "*.js", true));
         }
     }
 }
