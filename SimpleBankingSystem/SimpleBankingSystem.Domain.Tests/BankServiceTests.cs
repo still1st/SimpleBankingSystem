@@ -8,52 +8,31 @@ using System.Linq;
 namespace SimpleBankingSystem.Domain.Tests
 {
     [TestClass]
-    public class BankServiceTests
+    public class BankServiceTests : TestBase
     {
-        /// <summary>
-        /// The service is to execute banking logic
-        /// </summary>
-        private BankService _bankService;
-
-        /// <summary>
-        /// The user
-        /// </summary>
-        private User _user;
-
-        [TestInitialize]
-        public void Init()
-        {
-            var accountRepository = new AccountRepository();
-            var userRepository = new UserRepository();
-            var transactionRepository = new TransactionRepository();
-
-            _bankService = new BankService(accountRepository, userRepository, transactionRepository);
-            _user = CreateUser();
-        }
-
         [TestMethod]
         public void CreateAccount_ShouldReturnCreatedAccount()
         {
             // ARRANGE
 
             // ACT
-            var account = _bankService.CreateAccount(_user);
+            var account = BankService.CreateAccount(User);
 
             // ASSERT
             Assert.IsNotNull(account);
             Assert.AreEqual(0m, account.Balance);
-            Assert.AreEqual(_user, account.User);
+            Assert.AreEqual(User, account.User);
         }
 
         [TestMethod]
         public void GetUserAccounts_ShouldReturnAllAccountsForTheUser()
         {
             // ARRANGE
-            var account1 = _bankService.CreateAccount(_user);
-            var account2 = _bankService.CreateAccount(_user);
+            var account1 = BankService.CreateAccount(User);
+            var account2 = BankService.CreateAccount(User);
 
             // ACT
-            var accounts = _bankService.GetAccountsForUser(_user);
+            var accounts = BankService.GetAccountsForUser(User);
 
             // ASSERT
             Assert.IsNotNull(accounts);
@@ -61,16 +40,16 @@ namespace SimpleBankingSystem.Domain.Tests
         }
 
         [TestMethod]
-        public void DeleteAccount_AccountShouldBeRemoved()
+        public void RemoveAccount_AccountShouldBeRemoved()
         {
             // ARRANGE
-            var account = _bankService.CreateAccount(_user);
+            var account = BankService.CreateAccount(User);
 
             // ACT
-            _bankService.RemoveAccount(account);
+            BankService.RemoveAccount(account);
 
             // ASSERT
-            var accounts = _bankService.GetAccountsForUser(_user);
+            var accounts = BankService.GetAccountsForUser(User);
             Assert.IsTrue(accounts == null || !accounts.Any());
         }
 
@@ -78,12 +57,12 @@ namespace SimpleBankingSystem.Domain.Tests
         public void CreateDepositTransaction_ShouldReturnDepositTransaction()
         {
             // ARRANGE
-            var account = _bankService.CreateAccount(_user);
+            var account = BankService.CreateAccount(User);
             var amount = 1000m;
             var transactionType = TransactionType.Deposit;
 
             // ACT
-            var transaction = _bankService.CreateTransaction(transactionType, account, amount);
+            var transaction = BankService.CreateTransaction(transactionType, account, amount);
 
             // ASSERT
             Assert.IsNotNull(transaction);
@@ -97,12 +76,12 @@ namespace SimpleBankingSystem.Domain.Tests
         public void CreateWithdrawTransaction_ShouldReturnWithdrawTransaction()
         {
             // ARRANGE
-            var account = _bankService.CreateAccount(_user);
+            var account = BankService.CreateAccount(User);
             var amount = 500m;
             var transactionType = TransactionType.Withdraw;
 
             // ACT
-            var transaction = _bankService.CreateTransaction(transactionType, account, amount);
+            var transaction = BankService.CreateTransaction(transactionType, account, amount);
 
             // ASSERT
             Assert.IsNotNull(transaction);
@@ -116,13 +95,12 @@ namespace SimpleBankingSystem.Domain.Tests
         public void ExecuteDepositTransaction_AccountShouldBeIncreased()
         {
             // ARRANGE
-            var account = _bankService.CreateAccount(_user);
+            var account = BankService.CreateAccount(User);
             var amount = 500m;
-            var transactionType = TransactionType.Deposit;
-            var transaction = _bankService.CreateTransaction(transactionType, account, amount);
+            var transaction = BankService.CreateTransaction(TransactionType.Deposit, account, amount);
 
             // ACT
-            _bankService.ExecuteTransaction(transaction);
+            BankService.ExecuteTransaction(transaction);
 
             // ASSERT
             Assert.AreEqual(amount, account.Balance);
@@ -133,30 +111,18 @@ namespace SimpleBankingSystem.Domain.Tests
         public void ExecuteWithdrawTransaction_AccountShouldBeReduced()
         {
             // ARRANGE
-            var account = _bankService.CreateAccount(_user);
-            var balance = account.Balance;
-            var amount = 1000m;
-            var transactionType = TransactionType.Withdraw;
-            var transaction = _bankService.CreateTransaction(transactionType, account, amount);
+            var account = BankService.CreateAccount(User);
+            var depositTransaction = BankService.CreateTransaction(TransactionType.Deposit, account, 1000m);
+            var withdrawTransaction = BankService.CreateTransaction(TransactionType.Withdraw, account, 300m);
+            var balance = 700m;
 
             // ACT
-            _bankService.ExecuteTransaction(transaction);
+            BankService.ExecuteTransaction(depositTransaction);
+            BankService.ExecuteTransaction(withdrawTransaction);
 
             // ASSERT
-            Assert.AreEqual(balance - amount, account.Balance);
-            Assert.AreEqual(true, transaction.IsCommited);
-        }
-
-        [Ignore]
-        private User CreateUser()
-        {
-            var user = new User
-            {
-                FirstName = "John",
-                LastName = "Johnson"
-            };
-
-            return user;
+            Assert.AreEqual(balance, account.Balance);
+            Assert.AreEqual(true, withdrawTransaction.IsCommited);
         }
     }
 }

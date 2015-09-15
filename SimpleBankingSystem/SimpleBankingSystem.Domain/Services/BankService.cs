@@ -1,5 +1,7 @@
-﻿using SimpleBankingSystem.Domain.Models;
+﻿using SimpleBankingSystem.Domain.BusinessRules;
+using SimpleBankingSystem.Domain.Models;
 using SimpleBankingSystem.Domain.Repositories;
+using SimpleBankingSystem.Domain.Services.TransactionExecutors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +9,9 @@ using System.Linq;
 namespace SimpleBankingSystem.Domain.Services
 {
     /// <summary>
-    /// Service for banking logic
+    /// Default implementation of <see cref="IBankService"/>
     /// </summary>
-    public class BankService
+    public class BankService : IBankService
     {
         #region private fields
         /// <summary>
@@ -23,14 +25,9 @@ namespace SimpleBankingSystem.Domain.Services
         private ITransactionRepository _transactionRepository;
 
         /// <summary>
-        /// The repository for <see cref="User"/> entities
+        /// Dictionary of <see cref="ITransactionExecutors"/> by transaction types
         /// </summary>
-        private IUserRepository _userRepository;
-
-        /// <summary>
-        /// The transaction service
-        /// </summary>
-        private TransactionService _transactionService; 
+        private Dictionary<TransactionType, ITransactionExecutor> _transactionExecutors;
         #endregion
 
         #region constructors
@@ -38,14 +35,12 @@ namespace SimpleBankingSystem.Domain.Services
         /// Initializes a new instance of <see cref="BankService"/>
         /// </summary>
         public BankService(IAccountRepository accountRepository,
-            IUserRepository userRepository,
             ITransactionRepository transactionRepository)
         {
             _accountRepository = accountRepository;
-            _userRepository = userRepository;
             _transactionRepository = transactionRepository;
 
-            _transactionService = new TransactionService();
+            InitTransactionExecutors();
         } 
         #endregion
 
@@ -137,7 +132,7 @@ namespace SimpleBankingSystem.Domain.Services
         /// Executes the transaction
         /// </summary>
         /// <param name="transaction"><see cref="Transaction"/> entity</param>
-        public void ExecuteTransaction(Transaction transaction)
+        public IEnumerable<BusinessError> ExecuteTransaction(Transaction transaction)
         {
             if (transaction == null)
                 throw new ArgumentNullException("transaction");
@@ -148,7 +143,23 @@ namespace SimpleBankingSystem.Domain.Services
             if (!DoesTheTransactionExist(transaction))
                 throw new ArgumentException(String.Format("The transaction with ID {0} wasn't found", transaction.TransactionId));
 
-            _transactionService.Execute(transaction);
+            // validate transaction by business rules
+            var rules = GetBusinessRules(transaction);
+            var errors = new List<BusinessError>();
+            foreach (var rule in rules)
+            {
+                rule.CanExecuteTransaction();
+                errors.AddRange(rule.GetErrors());
+            }
+
+            // if it doesn't have errors then execute transaction
+            if (!errors.Any())
+            {
+                var executer = GetTransactionExecutorByType(transaction.Type);
+                executer.Execute(transaction);
+            }
+
+            return errors;
         }
 
         #region private methods
@@ -166,19 +177,6 @@ namespace SimpleBankingSystem.Domain.Services
         }
 
         /// <summary>
-        /// Checks exist the user in the collections of the accounts
-        /// </summary>
-        /// <param name="user"><see cref="User"/> entity</param>
-        /// <returns>TRUE - if the user exists in the accounts base, FALSE - the user doesn't exist there</returns>
-        private Boolean DoesTheUserExistInAccounts(User user)
-        {
-            if (user == null)
-                throw new ArgumentNullException("user");
-
-            return _accountRepository.GetAll().Any(x => x.User == user);
-        }
-
-        /// <summary>
         /// Checks exist the account in the collection of the accounts
         /// </summary>
         /// <param name="account"><see cref="Account"/> entity</param>
@@ -189,13 +187,51 @@ namespace SimpleBankingSystem.Domain.Services
                 throw new ArgumentNullException("account");
 
             var user = account.User;
-
-            if (!DoesTheUserExistInAccounts(account.User))
-                throw new ArgumentException(String.Format("Owner of an account with ID {0} wasn't found", account.AccountId));
-
             var accounts = _accountRepository.GetAll().Where(x => x.User == user);
+
             return accounts.Contains(account);
-        } 
+        }
+
+        /// <summary>
+        /// Initializes a dictionary of <see cref="ITransactionExecutor"/>
+        /// </summary>
+        private void InitTransactionExecutors()
+        {
+            _transactionExecutors = new Dictionary<TransactionType, ITransactionExecutor> 
+            {
+                {TransactionType.Deposit, new DepositTransactionExecutor()},
+                {TransactionType.Withdraw, new WithdrawTransactionExecutor()}
+            };
+        }
+
+        /// <summary>
+        /// Gets a transaction executor by transaction type
+        /// </summary>
+        /// <param name="transactionType">The transaction type</param>
+        /// <returns>Transaction executer</returns>
+        private ITransactionExecutor GetTransactionExecutorByType(TransactionType transactionType)
+        {
+            if (_transactionExecutors.ContainsKey(transactionType))
+                return _transactionExecutors[transactionType];
+
+            throw new KeyNotFoundException(String.Format("Transaction executer for type {0} wasn't found", transactionType));
+        }
+
+        /// <summary>
+        /// Gets business rules
+        /// </summary>
+        /// <param name="transaction"><see cref="Transaction"/> entity</param>
+        /// <returns></returns>
+        private IEnumerable<IBusinessRule> GetBusinessRules(Transaction transaction)
+        {
+            var accounts = _accountRepository.GetAccountsForUser(transaction.Account.User);
+
+            var rule1 = new AccountCantHaveLess100(transaction);
+            var rule2 = new UserCantWithdrawMoreThan90PercentTotalBalance(accounts, transaction);
+            var rule3 = new UserCantDepositMoreThan10000InTransaction(transaction);
+
+            return new List<IBusinessRule> { rule1, rule2, rule3};
+        }
         #endregion
     }
 }

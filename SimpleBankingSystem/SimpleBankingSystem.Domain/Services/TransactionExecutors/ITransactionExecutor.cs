@@ -1,6 +1,6 @@
 ﻿using SimpleBankingSystem.Domain.Models;
 
-namespace SimpleBankingSystem.Domain.Services.TransactionExecuters
+namespace SimpleBankingSystem.Domain.Services.TransactionExecutors
 {
     /// <summary>
     /// Interface for transaction executer

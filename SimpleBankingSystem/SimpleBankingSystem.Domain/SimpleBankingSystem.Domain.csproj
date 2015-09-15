@@ -39,6 +39,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BusinessRules\AccountCantHaveLess100.cs" />
+    <Compile Include="BusinessRules\BusinessError.cs" />
+    <Compile Include="BusinessRules\BusinessRuleBase.cs" />
+    <Compile Include="BusinessRules\IBusinessRule.cs" />
+    <Compile Include="BusinessRules\UserCantDepositMoreThan10000InTransaction.cs" />
+    <Compile Include="BusinessRules\UserCantWithdrawMoreThan90PercentTotalBalance.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\Transaction.cs" />
     <Compile Include="Models\TransactionType.cs" />
@@ -53,10 +59,10 @@
     <Compile Include="Repositories\TransactionRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Services\BankService.cs" />
-    <Compile Include="Services\TransactionExecuters\WithdrawTransactionExecutor.cs" />
-    <Compile Include="Services\TransactionService.cs" />
-    <Compile Include="Services\TransactionExecuters\DepositTransactionExecutor.cs" />
-    <Compile Include="Services\TransactionExecuters\ITransactionExecutor.cs" />
+    <Compile Include="Services\IBankService.cs" />
+    <Compile Include="Services\TransactionExecutors\WithdrawTransactionExecutor.cs" />
+    <Compile Include="Services\TransactionExecutors\DepositTransactionExecutor.cs" />
+    <Compile Include="Services\TransactionExecutors\ITransactionExecutor.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
