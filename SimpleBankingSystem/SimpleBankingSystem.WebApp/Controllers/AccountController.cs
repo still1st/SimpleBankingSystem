@@ -118,10 +118,10 @@ namespace SimpleBankingSystem.WebApp.Controllers
             _bankService.ExecuteTransaction(transaction);
             _uow.Commit();
 
-            var vm = new TransactionViewModel
+            var vm = new
             {
                 Balance = account.Balance,
-                Transaction = transaction
+                Transaction = new TransactionViewModel(transaction)
             };
 
             return OkResult(vm);
@@ -140,7 +140,9 @@ namespace SimpleBankingSystem.WebApp.Controllers
             if (account == null)
                 return NotFound();
 
-            var transactions = _bankService.GetTransactionsByAccount(account).ToList();
+            var transactions = _bankService.GetTransactionsByAccount(account)
+                .Select(x => new TransactionViewModel(x))
+                .ToList();
 
             return OkResult(transactions);
         }

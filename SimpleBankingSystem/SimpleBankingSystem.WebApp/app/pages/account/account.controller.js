@@ -13,6 +13,11 @@
         $scope.selectedOperation = $scope.operations[0];
 
         $scope.execute = function () {
+            if ($scope.amount <= 0) {
+                alert("Amount cann't be a negative number or zero");
+                return;
+            }
+
             accountService.executeTransaction({ accountId: $scope.accountId, type: $scope.selectedOperation.type, amount: $scope.amount }, function (result) {
                 $scope.balance = result.data.balance;
                 $scope.transactions.push(result.data.transaction);

@@ -21,8 +21,11 @@
             });
         };
 
+        $scope.loaded = false;
         accountService.getAccounts(function (result) {
             if (result.isValid)
                 $scope.accounts = result.data;
+
+            $scope.loaded = true;
         });
     }]);
