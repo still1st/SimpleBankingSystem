@@ -42,7 +42,7 @@ namespace SimpleBankingSystem.Domain.BusinessRules
             }
 
             if(!canExecute)
-                Errors.Add(new BusinessError(Transaction.TransactionId, "An account can't have less than $100 at any time"));
+                AddError("An account can't have less than $100 at any time");
 
             return canExecute;
         }

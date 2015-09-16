@@ -48,7 +48,7 @@ namespace SimpleBankingSystem.Domain.BusinessRules
                 canExecute = false;
 
             if (!canExecute)
-                Errors.Add(new BusinessError(Transaction.TransactionId, "Can't withdraw more than 90% of their total balance from an account in a single transaction."));
+                AddError("Can't withdraw more than 90% of their total balance from an account in a single transaction.");
 
             return canExecute;
         }

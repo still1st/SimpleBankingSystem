@@ -17,7 +17,7 @@ namespace SimpleBankingSystem.Domain.BusinessRules
         /// <summary>
         /// The collection of the errors
         /// </summary>
-        protected readonly List<BusinessError> Errors;
+        private readonly List<BusinessError> _errors;
 
         /// <summary>
         /// Initiales a new instance of <see cref="BusinessRuleBase"/>
@@ -29,7 +29,7 @@ namespace SimpleBankingSystem.Domain.BusinessRules
                 throw new ArgumentNullException("transaction");
 
             Transaction = transaction;
-            Errors = new List<BusinessError>();
+            _errors = new List<BusinessError>();
         }
 
         /// <summary>
@@ -45,7 +45,19 @@ namespace SimpleBankingSystem.Domain.BusinessRules
         /// <returns>Collection of the errors</returns>
         public IEnumerable<BusinessError> GetErrors()
         {
-            return Errors;
+            return _errors;
+        }
+
+        /// <summary>
+        /// Adds error in errors collection
+        /// </summary>
+        /// <param name="message">Message of the error</param>
+        protected void AddError(String message)
+        {
+            if (String.IsNullOrEmpty(message))
+                throw new ArgumentNullException("message");
+
+            _errors.Add(new BusinessError(Transaction.TransactionId, message));
         }
     }
 }

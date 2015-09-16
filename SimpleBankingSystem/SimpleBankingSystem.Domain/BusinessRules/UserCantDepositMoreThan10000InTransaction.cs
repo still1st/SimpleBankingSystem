@@ -37,7 +37,7 @@ namespace SimpleBankingSystem.Domain.BusinessRules
                 canExecute = false;
 
             if (!canExecute)
-                Errors.Add(new BusinessError(Transaction.TransactionId, "Can't deposit more than $10,000 in a single transaction"));
+                AddError("Can't deposit more than $10,000 in a single transaction");
 
             return canExecute;
         }
