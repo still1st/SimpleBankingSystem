@@ -14,17 +14,17 @@ namespace SimpleBankingSystem.Domain.BusinessRules
         /// <summary>
         /// Collection of the accounts of the user
         /// </summary>
-        private IEnumerable<Account> _accounts;
+        private IEnumerable<Account> _userAccounts;
 
         /// <summary>
         /// Initializes a new instance of <see cref="UserCantWithdrawMoreThan90PercentTotalBalance"/>
         /// </summary>
-        /// <param name="accounts">Collection of the accounts of the user</param>
+        /// <param name="userAccounts">Collection of the accounts of the user</param>
         /// <param name="transaction"><see cref="Transaction"/> entity</param>
-        public UserCantWithdrawMoreThan90PercentTotalBalance(IEnumerable<Account> accounts, Transaction transaction)
+        public UserCantWithdrawMoreThan90PercentTotalBalance(IEnumerable<Account> userAccounts, Transaction transaction)
             : base(transaction)
         {
-            _accounts = accounts;
+            _userAccounts = userAccounts;
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace SimpleBankingSystem.Domain.BusinessRules
                 return canExecute;
 
             var amount = Transaction.Amount;
-            var totalBalance = _accounts.Sum(x => x.Balance);
+            var totalBalance = _userAccounts.Sum(x => x.Balance);
 
             var percentage = amount / totalBalance * 100;
             if (percentage > 90)

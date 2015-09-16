@@ -25,7 +25,12 @@ namespace SimpleBankingSystem.Domain.Models
         /// <summary>
         /// Gets or sets the account
         /// </summary>
-        public Account Account { get; set; }
+        public virtual Account Account { get; set; }
+
+        /// <summary>
+        /// Gets or sets the info message about the transaction
+        /// </summary>
+        public String Message { get; set; }
 
         /// <summary>
         /// Gets or sets the flag that the transaction is commited

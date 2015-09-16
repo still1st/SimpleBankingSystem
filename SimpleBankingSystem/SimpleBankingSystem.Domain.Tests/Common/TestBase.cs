@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimpleBankingSystem.Domain.Models;
-using SimpleBankingSystem.Domain.Repositories;
 using SimpleBankingSystem.Domain.Services;
+using SimpleBankingSystem.Domain.Tests.Stubs;
 
 namespace SimpleBankingSystem.Domain.Tests
 {
@@ -17,6 +17,11 @@ namespace SimpleBankingSystem.Domain.Tests
         protected IBankService BankService;
 
         /// <summary>
+        /// The service for business rules
+        /// </summary>
+        protected IBusinessRulesService RulesService;
+
+        /// <summary>
         /// The user
         /// </summary>
         protected User User;
@@ -24,10 +29,11 @@ namespace SimpleBankingSystem.Domain.Tests
         [TestInitialize]
         public virtual void Init()
         {
-            var accountRepository = new AccountRepository();
-            var transactionRepository = new TransactionRepository();
+            var accountRepository = new AccountRepositoryStub();
+            var transactionRepository = new TransactionRepositoryStub();
 
-            BankService = new BankService(accountRepository, transactionRepository);
+            RulesService = new BusinessRulesService();
+            BankService = new BankService(accountRepository, transactionRepository, RulesService);
             User = CreateUser();
         }
 

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SimpleBankingSystem.Domain.Repositories
 {
@@ -16,10 +14,10 @@ namespace SimpleBankingSystem.Domain.Repositories
         T GetById(Int64 id);
 
         /// <summary>
-        /// Gets all entities
+        /// Queries this repository - provides ability to query using LINQ through entities inside repository.
         /// </summary>
         /// <returns>Collection of the entities</returns>
-        IEnumerable<T> GetAll();
+        IQueryable<T> Query();
 
         /// <summary>
         /// Adds entity
@@ -38,5 +36,11 @@ namespace SimpleBankingSystem.Domain.Repositories
         /// </summary>
         /// <param name="entity">Entity</param>
         void Delete(T entity);
+
+        /// <summary>
+        /// Deletes entities
+        /// </summary>
+        /// <param name="entities">Collection of the entities</param>
+        void DeleteRange(IEnumerable<T> entities);
     }
 }

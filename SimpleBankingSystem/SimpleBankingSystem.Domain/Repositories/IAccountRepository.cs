@@ -1,5 +1,6 @@
 ﻿using SimpleBankingSystem.Domain.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SimpleBankingSystem.Domain.Repositories
 {
@@ -13,6 +14,6 @@ namespace SimpleBankingSystem.Domain.Repositories
         /// </summary>
         /// <param name="user"><see cref="User"/> entity</param>
         /// <returns>Collection of the <see cref="Account"/> entities</returns>
-        IEnumerable<Account> GetAccountsForUser(User user);
+        IQueryable<Account> GetAccountsForUser(User user);
     }
 }

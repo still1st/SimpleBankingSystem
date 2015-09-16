@@ -1,0 +1,45 @@
+﻿<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4>Operations</h4>
+    </div>
+    <div class="panel-body">
+        <form name="operationForm">
+            <div class="form-group">
+                <label class="control-label">Amount</label>
+                <input type="text" class="form-control" ng-model="amount" required/>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Operation</label>
+                <div class="radio" ng-repeat="operation in operations">
+                    <label>
+                        <input type="radio" name="action" ng-model="$parent.selectedOperation" ng-value="operation" required/> {{operation.name}}
+                    </label>
+                </div>
+            </div>
+            <button class="btn btn-primary" ng-class="{'disabled': !operationForm.$valid}" ng-click="execute()">Execute</button>
+        </form>
+    </div>
+</div>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4>Account #{{accountId}}</h4>
+        <h4>Balance {{balance | currency}}</h4>
+    </div>
+    <table class="table table-responsive table-striped table-hover">
+        <tr>
+            <th>ID</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>IsCommited</th>
+            <th>Message</th>
+        </tr>
+        <tr ng-repeat="transaction in transactions">
+            <td ng-bind="transaction.transactionId"></td>
+            <td ng-bind="transaction.type"></td>
+            <td ng-bind="transaction.amount | currency"></td>
+            <td ng-bind="transaction.isCommited"></td>
+            <td ng-bind="transaction.message"></td>
+        </tr>
+    </table>
+</div>

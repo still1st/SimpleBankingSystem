@@ -1,1 +1,26 @@
-﻿
+﻿<div class="panel panel-primary">
+    <div class="panel-heading">
+        <div class="btn-toolbar pull-right">
+            <button class="btn btn-default btn-sm" ng-click="addAccount()">Add new account</button>
+        </div>
+        <h4>Accounts</h4>
+    </div>
+
+    <table class="table table-striped table-hover table-bordered table-responsive">
+        <tr>
+            <th>Number</th>
+            <th>Balance</th>
+            <th>Action</th>
+        </tr>
+        <tr ng-repeat="account in accounts" >
+            <td ng-bind="account.accountId" ></td>
+            <td ng-bind="account.balance | currency"></td>
+            <td>
+                <div class="btn-group">
+                    <button class="btn btn-default btn-sm" ng-click="openAccount(account.accountId)">Details</button>
+                    <button class="btn btn-default btn-sm" ng-click="removeAccount(account)">Remove</button>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

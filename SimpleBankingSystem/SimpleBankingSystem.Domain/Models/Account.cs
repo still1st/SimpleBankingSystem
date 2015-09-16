@@ -20,6 +20,6 @@ namespace SimpleBankingSystem.Domain.Models
         /// <summary>
         /// Gets or sets the owner of the account
         /// </summary>
-        public User User { get; set; }
+        public virtual User User { get; set; }
     }
 }

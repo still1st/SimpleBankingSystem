@@ -56,6 +56,10 @@
     <Compile Include="Common\BusinessRulesTestBase.cs" />
     <Compile Include="Common\TestBase.cs" />
     <Compile Include="AccountCantHaveLess100Tests.cs" />
+    <Compile Include="Stubs\AccountRepositoryStub.cs" />
+    <Compile Include="Stubs\RepositoryStub.cs" />
+    <Compile Include="Stubs\TransactionRepositoryStub.cs" />
+    <Compile Include="Stubs\UserRepositoryStub.cs" />
     <Compile Include="WithdrawMoreThan90PercentTotalBalanceTests.cs" />
   </ItemGroup>
   <ItemGroup>

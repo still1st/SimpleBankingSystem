@@ -18,11 +18,25 @@ namespace SimpleBankingSystem.Domain.Services
         Account CreateAccount(User user);
 
         /// <summary>
+        /// Gets account by id
+        /// </summary>
+        /// <param name="accountId">Account Id</param>
+        /// <returns><see cref="Account"/> entity</returns>
+        Account GetAccountById(Int64 accountId);
+
+        /// <summary>
         /// Gets all accounts for the user
         /// </summary>
         /// <param name="user"><see cref="User"/> entity</param>
         /// <returns>Collection of the <see cref="Account"/> entities for the user</returns>
         IEnumerable<Account> GetAccountsForUser(User user);
+
+        /// <summary>
+        /// Gets transaction by account
+        /// </summary>
+        /// <param name="account"><see cref="Account"/> entity</param>
+        /// <returns>Collection of <see cref="Transaction"/> entities</returns>
+        IEnumerable<Transaction> GetTransactionsByAccount(Account account);
 
         /// <summary>
         /// Removes an account
@@ -43,6 +57,6 @@ namespace SimpleBankingSystem.Domain.Services
         /// Executes the transaction
         /// </summary>
         /// <param name="transaction"><see cref="Transaction"/> entity</param>
-        IEnumerable<BusinessError> ExecuteTransaction(SimpleBankingSystem.Domain.Models.Transaction transaction);
+        IEnumerable<BusinessError> ExecuteTransaction(Transaction transaction);
     }
 }

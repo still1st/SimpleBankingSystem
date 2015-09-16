@@ -17,7 +17,7 @@ namespace SimpleBankingSystem.Domain.BusinessRules
         /// <summary>
         /// The collection of the errors
         /// </summary>
-        protected List<BusinessError> Errors;
+        protected readonly List<BusinessError> Errors;
 
         /// <summary>
         /// Initiales a new instance of <see cref="BusinessRuleBase"/>

@@ -28,6 +28,11 @@ namespace SimpleBankingSystem.Domain.Services
         /// Dictionary of <see cref="ITransactionExecutors"/> by transaction types
         /// </summary>
         private Dictionary<TransactionType, ITransactionExecutor> _transactionExecutors;
+
+        /// <summary>
+        /// Service for business rules
+        /// </summary>
+        private IBusinessRulesService _rulesService;
         #endregion
 
         #region constructors
@@ -35,10 +40,12 @@ namespace SimpleBankingSystem.Domain.Services
         /// Initializes a new instance of <see cref="BankService"/>
         /// </summary>
         public BankService(IAccountRepository accountRepository,
-            ITransactionRepository transactionRepository)
+            ITransactionRepository transactionRepository,
+            IBusinessRulesService rulesService)
         {
             _accountRepository = accountRepository;
             _transactionRepository = transactionRepository;
+            _rulesService = rulesService;
 
             InitTransactionExecutors();
         } 
@@ -63,6 +70,16 @@ namespace SimpleBankingSystem.Domain.Services
             _accountRepository.Add(account);
 
             return account;
+        }
+
+        /// <summary>
+        /// Gets account by id
+        /// </summary>
+        /// <param name="accountId">Account Id</param>
+        /// <returns><see cref="Account"/> entity</returns>
+        public Account GetAccountById(Int64 accountId)
+        {
+            return _accountRepository.GetById(accountId);
         }
 
         /// <summary>
@@ -91,7 +108,25 @@ namespace SimpleBankingSystem.Domain.Services
             if (!DoesTheAccountExist(account))
                 throw new ArgumentException(String.Format("Account with ID {0} wasn't found", account.AccountId));
 
+            // first delete all transactions
+            var transactions = _transactionRepository.Query().Where(x => x.Account.AccountId == account.AccountId);
+            _transactionRepository.DeleteRange(transactions);
+
+            // delete account
             _accountRepository.Delete(account);
+        }
+
+        /// <summary>
+        /// Gets transaction by account
+        /// </summary>
+        /// <param name="account"><see cref="Account"/> entity</param>
+        /// <returns>Collection of <see cref="Transaction"/> entities</returns>
+        public IEnumerable<Transaction> GetTransactionsByAccount(Account account)
+        {
+            if (account == null)
+                throw new ArgumentNullException("account");
+
+            return _transactionRepository.Query().Where(x => x.Account.AccountId == account.AccountId);
         }
 
         /// <summary>
@@ -144,20 +179,18 @@ namespace SimpleBankingSystem.Domain.Services
                 throw new ArgumentException(String.Format("The transaction with ID {0} wasn't found", transaction.TransactionId));
 
             // validate transaction by business rules
-            var rules = GetBusinessRules(transaction);
-            var errors = new List<BusinessError>();
-            foreach (var rule in rules)
-            {
-                rule.CanExecuteTransaction();
-                errors.AddRange(rule.GetErrors());
-            }
+            var userAccounts = _accountRepository.GetAccountsForUser(transaction.Account.User);
+            var errors = _rulesService.Validate(userAccounts, transaction);
+            var isValid = !errors.Any();
 
             // if it doesn't have errors then execute transaction
-            if (!errors.Any())
+            if (isValid)
             {
                 var executer = GetTransactionExecutorByType(transaction.Type);
                 executer.Execute(transaction);
             }
+
+            _transactionRepository.Update(transaction);
 
             return errors;
         }
@@ -173,7 +206,7 @@ namespace SimpleBankingSystem.Domain.Services
             if (transaction == null)
                 throw new ArgumentNullException("transaction");
 
-            return _transactionRepository.GetAll().Contains(transaction);
+            return _transactionRepository.Query().Any(x => x.TransactionId == transaction.TransactionId);
         }
 
         /// <summary>
@@ -186,10 +219,7 @@ namespace SimpleBankingSystem.Domain.Services
             if (account == null)
                 throw new ArgumentNullException("account");
 
-            var user = account.User;
-            var accounts = _accountRepository.GetAll().Where(x => x.User == user);
-
-            return accounts.Contains(account);
+            return _accountRepository.Query().Any(x => x.AccountId == account.AccountId);
         }
 
         /// <summary>
@@ -214,23 +244,7 @@ namespace SimpleBankingSystem.Domain.Services
             if (_transactionExecutors.ContainsKey(transactionType))
                 return _transactionExecutors[transactionType];
 
-            throw new KeyNotFoundException(String.Format("Transaction executer for type {0} wasn't found", transactionType));
-        }
-
-        /// <summary>
-        /// Gets business rules
-        /// </summary>
-        /// <param name="transaction"><see cref="Transaction"/> entity</param>
-        /// <returns></returns>
-        private IEnumerable<IBusinessRule> GetBusinessRules(Transaction transaction)
-        {
-            var accounts = _accountRepository.GetAccountsForUser(transaction.Account.User);
-
-            var rule1 = new AccountCantHaveLess100(transaction);
-            var rule2 = new UserCantWithdrawMoreThan90PercentTotalBalance(accounts, transaction);
-            var rule3 = new UserCantDepositMoreThan10000InTransaction(transaction);
-
-            return new List<IBusinessRule> { rule1, rule2, rule3};
+            throw new ArgumentException(String.Format("Transaction executor for type {0} wasn't found", transactionType));
         }
         #endregion
     }

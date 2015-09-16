@@ -6,6 +6,10 @@
         templateUrl: '/app/pages/home/home.html',
         controller: 'HomeCtrl',
         caseInsensitiveMatch: true
+    }).when('/account/:accountId', {
+        templateUrl: '/app/pages/account/account.html',
+        controller: 'AccountCtrl',
+        caseInsensitiveMatch: true
     }).otherwise({
         redirectTo: '/home'
     });
