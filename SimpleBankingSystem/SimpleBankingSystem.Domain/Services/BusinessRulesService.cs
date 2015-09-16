@@ -3,6 +3,7 @@ using SimpleBankingSystem.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace SimpleBankingSystem.Domain.Services
 {
@@ -27,12 +28,17 @@ namespace SimpleBankingSystem.Domain.Services
 
             foreach (var rule in rules)
             {
-                rule.CanExecuteTransaction();
-                errors.AddRange(rule.GetErrors());
+                if(!rule.CanExecuteTransaction())
+                    errors.AddRange(rule.GetErrors());
             }
 
             if (errors.Count > 0)
-                transaction.Message = errors[0].Message;
+            {
+                var sb = new StringBuilder();
+                errors.ForEach(x => sb.AppendLine(x.Message));
+
+                transaction.Message = sb.ToString();
+            }
 
             return errors;
         }
