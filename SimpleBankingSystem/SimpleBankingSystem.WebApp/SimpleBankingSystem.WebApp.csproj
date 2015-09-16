@@ -321,13 +321,13 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SimpleBankingSystem.Domain.DataAccess\SimpleBankingSystem.Domain.DataAccess.csproj">
+      <Project>{0d4d18ce-d5e3-4521-a449-8a918e28cc28}</Project>
+      <Name>SimpleBankingSystem.Domain.DataAccess</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SimpleBankingSystem.Domain\SimpleBankingSystem.Domain.csproj">
       <Project>{371e67fd-7b26-4f6f-aa39-860a04697900}</Project>
       <Name>SimpleBankingSystem.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SimpleBankingSystem.Doman.DataAccess\SimpleBankingSystem.Domain.DataAccess.csproj">
-      <Project>{0d4d18ce-d5e3-4521-a449-8a918e28cc28}</Project>
-      <Name>SimpleBankingSystem.Domain.DataAccess</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

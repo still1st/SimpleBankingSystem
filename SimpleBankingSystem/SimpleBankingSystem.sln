@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleBankingSystem.Domain.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleBankingSystem.WebApp", "SimpleBankingSystem.WebApp\SimpleBankingSystem.WebApp.csproj", "{EC6BDF07-81E2-41A5-A660-18D815B89818}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleBankingSystem.Domain.DataAccess", "SimpleBankingSystem.Doman.DataAccess\SimpleBankingSystem.Domain.DataAccess.csproj", "{0D4D18CE-D5E3-4521-A449-8A918E28CC28}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleBankingSystem.Domain.DataAccess", "SimpleBankingSystem.Domain.DataAccess\SimpleBankingSystem.Domain.DataAccess.csproj", "{0D4D18CE-D5E3-4521-A449-8A918E28CC28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
