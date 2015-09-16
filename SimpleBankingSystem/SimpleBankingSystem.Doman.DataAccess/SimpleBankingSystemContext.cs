@@ -1,8 +1,8 @@
 ﻿using SimpleBankingSystem.Domain.Models;
-using SimpleBankingSystem.Doman.DataAccess.Migrations;
+using SimpleBankingSystem.Domain.DataAccess.Migrations;
 using System.Data.Entity;
 
-namespace SimpleBankingSystem.Doman.DataAccess
+namespace SimpleBankingSystem.Domain.DataAccess
 {
     /// <summary>
     /// DataBase context

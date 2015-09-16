@@ -2,7 +2,7 @@
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 
-namespace Kingstar.Data.Base
+namespace SimpleBankingSystem.Domain.DataAccess.Base
 {
     public class UnitOfWorkImpl : IUnitOfWork
     {

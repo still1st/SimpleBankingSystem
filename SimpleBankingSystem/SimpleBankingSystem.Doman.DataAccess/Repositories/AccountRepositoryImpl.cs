@@ -1,10 +1,10 @@
-﻿using Kingstar.Data.Base;
+﻿using SimpleBankingSystem.Domain.DataAccess.Base;
 using SimpleBankingSystem.Domain.Models;
 using SimpleBankingSystem.Domain.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SimpleBankingSystem.Doman.DataAccess.Repositories
+namespace SimpleBankingSystem.Domain.DataAccess.Repositories
 {
     /// <summary>
     /// Default implementation of <see cref="AccountRepositoryImpl"/>

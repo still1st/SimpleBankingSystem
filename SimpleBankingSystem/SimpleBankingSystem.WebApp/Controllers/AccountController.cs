@@ -1,13 +1,10 @@
-﻿using Kingstar.Data.Base;
+﻿using SimpleBankingSystem.Domain.DataAccess.Base;
 using SimpleBankingSystem.Domain.Models;
 using SimpleBankingSystem.Domain.Repositories;
 using SimpleBankingSystem.Domain.Services;
 using SimpleBankingSystem.WebApp.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 
 namespace SimpleBankingSystem.WebApp.Controllers

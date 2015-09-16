@@ -1,4 +1,4 @@
-namespace SimpleBankingSystem.Doman.DataAccess.Migrations
+namespace SimpleBankingSystem.Domain.DataAccess.Migrations
 {
     using SimpleBankingSystem.Domain.Models;
     using System;

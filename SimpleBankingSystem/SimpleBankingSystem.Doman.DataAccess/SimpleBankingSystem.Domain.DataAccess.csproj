@@ -7,8 +7,8 @@
     <ProjectGuid>{0D4D18CE-D5E3-4521-A449-8A918E28CC28}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SimpleBankingSystem.Doman.DataAccess</RootNamespace>
-    <AssemblyName>SimpleBankingSystem.Doman.DataAccess</AssemblyName>
+    <RootNamespace>SimpleBankingSystem.Domain.DataAccess</RootNamespace>
+    <AssemblyName>SimpleBankingSystem.Domain.DataAccess</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

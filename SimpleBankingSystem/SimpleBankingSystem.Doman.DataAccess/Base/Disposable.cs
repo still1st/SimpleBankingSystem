@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Kingstar.Data.Base
+namespace SimpleBankingSystem.Domain.DataAccess.Base
 {
     /// <summary>
     /// Implements default .NET disposable pattern

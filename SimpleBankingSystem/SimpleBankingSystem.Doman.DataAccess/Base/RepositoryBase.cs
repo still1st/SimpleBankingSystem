@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 
-namespace Kingstar.Data.Base
+namespace SimpleBankingSystem.Domain.DataAccess.Base
 {
     public abstract class RepositoryBase<T> : IRepository<T> where T:class
     {

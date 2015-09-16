@@ -1,8 +1,8 @@
-﻿using SimpleBankingSystem.Doman.DataAccess;
+﻿using SimpleBankingSystem.Domain.DataAccess;
 using System;
 using System.Data.Entity;
 
-namespace Kingstar.Data.Base
+namespace SimpleBankingSystem.Domain.DataAccess.Base
 {
     class DefaultContextFactoryImpl : Disposable, IContextFactory
     {

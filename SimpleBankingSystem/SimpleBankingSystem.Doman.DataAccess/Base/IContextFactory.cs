@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.Entity;
 
-namespace Kingstar.Data.Base
+namespace SimpleBankingSystem.Domain.DataAccess.Base
 {
     /// <summary>
     /// Provides basic interface for data context factory

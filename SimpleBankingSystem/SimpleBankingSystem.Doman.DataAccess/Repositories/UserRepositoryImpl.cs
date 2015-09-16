@@ -1,8 +1,8 @@
-﻿using Kingstar.Data.Base;
+﻿using SimpleBankingSystem.Domain.DataAccess.Base;
 using SimpleBankingSystem.Domain.Models;
 using SimpleBankingSystem.Domain.Repositories;
 
-namespace SimpleBankingSystem.Doman.DataAccess.Repositories
+namespace SimpleBankingSystem.Domain.DataAccess.Repositories
 {
     /// <summary>
     /// Default implementation of <see cref="IUserRepository"/>

@@ -1,8 +1,7 @@
 ﻿using Autofac;
 using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
-using Kingstar.Data.Base;
-using SimpleBankingSystem.Domain.Repositories;
+using SimpleBankingSystem.Domain.DataAccess.Base;
 using SimpleBankingSystem.Domain.Services;
 using System.Reflection;
 using System.Web.Mvc;

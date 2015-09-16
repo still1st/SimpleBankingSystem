@@ -325,9 +325,9 @@
       <Project>{371e67fd-7b26-4f6f-aa39-860a04697900}</Project>
       <Name>SimpleBankingSystem.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SimpleBankingSystem.Doman.DataAccess\SimpleBankingSystem.Doman.DataAccess.csproj">
+    <ProjectReference Include="..\SimpleBankingSystem.Doman.DataAccess\SimpleBankingSystem.Domain.DataAccess.csproj">
       <Project>{0d4d18ce-d5e3-4521-a449-8a918e28cc28}</Project>
-      <Name>SimpleBankingSystem.Doman.DataAccess</Name>
+      <Name>SimpleBankingSystem.Domain.DataAccess</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
